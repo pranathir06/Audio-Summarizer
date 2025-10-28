@@ -1,0 +1,14 @@
+langchain
+langgraph
+langchain_community
+langchain_core
+google-generativeai
+langchain_gemini
+streamlit
+python-dotenv
+elevenlabs
+langchain-google-genai
+moviepy
+mutagen
+
+
