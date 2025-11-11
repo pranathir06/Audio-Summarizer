@@ -35,7 +35,9 @@ class DisplayResultStreamlit:
         
         # Display transcript in a collapsible box
         if self.audio_result.get("transcript"):
-            transcript_text = self.audio_result["transcript"].text if hasattr(self.audio_result["transcript"], 'text') else str(self.audio_result["transcript"])
+            # Transcript is now stored as a string, but handle both cases for backward compatibility
+            transcript = self.audio_result["transcript"]
+            transcript_text = transcript.text if hasattr(transcript, 'text') else str(transcript)
             
             with st.expander("📝 Transcript", expanded=False):
                 st.text_area(

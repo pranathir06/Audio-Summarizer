@@ -73,11 +73,42 @@ def _process_audio_file(audio_file):
             graph_builder = AudioGraphBuilder(model)
             graph = graph_builder.setup_graph("Audio Summarizer")
             
-            # Create initial state with audio file path
+            # Get audio/video duration for token tracking
+            # Check if it's a video file
+            video_extensions = ['.mp4', '.mov', '.avi', '.mkv']
+            is_video = any(audio_file.name.lower().endswith(ext) for ext in video_extensions)
+            
+            import tempfile as tmp
+            temp_check_path = tmp.NamedTemporaryFile(delete=False, suffix=f".{audio_file.name.split('.')[-1]}")
+            temp_check_path.write(audio_file.getvalue())
+            temp_check_path.close()
+            
+            duration_seconds = None
+            try:
+                if is_video:
+                    # Use moviepy for video files
+                    from moviepy import VideoFileClip
+                    video = VideoFileClip(temp_check_path.name)
+                    duration_seconds = float(video.duration) if video.duration else None
+                    video.close()
+                else:
+                    # Use mutagen for audio files
+                    from mutagen import File as MutagenFile
+                    audio_file_obj = MutagenFile(temp_check_path.name)
+                    if audio_file_obj and hasattr(audio_file_obj, 'info') and audio_file_obj.info:
+                        duration_seconds = float(audio_file_obj.info.length) if audio_file_obj.info.length else None
+            except Exception:
+                duration_seconds = None
+            finally:
+                if os.path.exists(temp_check_path.name):
+                    os.unlink(temp_check_path.name)
+            
+            # Create initial state with audio file path and duration
             initial_state = {
                 "audio_path": temp_audio_path,
                 "transcript": None,
-                "summary": None
+                "summary": None,
+                "audio_duration_seconds": duration_seconds
             }
             
             # Run the graph
@@ -98,6 +129,7 @@ def _process_audio_file(audio_file):
             display_result.display_result_on_ui()
             
             # Note: Don't delete temp file yet - chat needs it for graph re-execution
+            # Token usage will be updated in sidebar on next page render
             
     except Exception as e:
         st.error(f"❌ Error processing audio file: {e}")

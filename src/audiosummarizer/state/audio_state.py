@@ -8,3 +8,4 @@ class AudioAnalysisState(TypedDict):
     audio_path: str
     transcript: Optional[str]
     summary: Optional[str]
+    audio_duration_seconds: Optional[float]  # Duration in seconds for token tracking

@@ -12,6 +12,10 @@ An intelligent audio processing application that transcribes customer audio call
 - Python 3.8+
 - GEMINI_API_KEY environment variable
 - ELEVENLABS_API_KEY environment variable
+- **ffmpeg** (for video file processing - optional but recommended)
+  - **macOS**: `brew install ffmpeg`
+  - **Linux**: `sudo apt-get install ffmpeg`
+  - **Windows**: Download from https://ffmpeg.org/download.html
 
 #### How to Use
 1. Install requirements: `pip install -r requirements.txt`

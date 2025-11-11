@@ -2,13 +2,19 @@ langchain
 langgraph
 langchain_community
 langchain_core
-google-generativeai
+google-generativeai>=0.8.5
 langchain_gemini
 streamlit
 python-dotenv
 elevenlabs
-langchain-google-genai
+langchain-google-genai>=2.0.0,<3.0.0
 moviepy
 mutagen
+
+# Note: ffmpeg is required for video file processing but cannot be installed via pip.
+# Install it separately:
+#   macOS: brew install ffmpeg
+#   Linux: sudo apt-get install ffmpeg
+#   Windows: Download from https://ffmpeg.org/download.html
 
 

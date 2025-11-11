@@ -4,6 +4,15 @@ from src.audiosummarizer.LLMS.geminillm import GeminiLLM
 def summarize_node(state: AudioAnalysisState):
     """Summarize the transcript using Gemini LLM"""
     
+    # Check if transcript exists and is not empty
+    transcript = state.get('transcript')
+    if not transcript:
+        state["summary"] = "Error: No transcript available to summarize."
+        return state
+    
+    # Ensure transcript is a string
+    transcript_text = str(transcript) if not isinstance(transcript, str) else transcript
+    
     # Initialize Gemini LLM and create a simple summarization prompt
     llm = GeminiLLM()
     model = llm.get_llm()
@@ -20,7 +29,7 @@ def summarize_node(state: AudioAnalysisState):
         4. **Customer Sentiment:** Identify the customer's sentiment (e.g., frustrated, satisfied, neutral).
         5. **Key Points / Notes:** List any other important points or observations.
 
-        Transcript: {state['transcript']}
+        Transcript: {transcript_text}
         
 
         Provide the summary in **clear, concise sentences**, using bullet points where appropriate. Avoid adding information not present in the transcript.
