@@ -1,32 +1,32 @@
 ## Vision
-Purpose: Summarize customer audio calls with transcripts, structured summaries, and Q&A
-Users: Customer support analysts and teams reviewing call recordings
+Purpose: Transcribe customer audio calls, summarize them, and enable Q&A on content
+Users: Customer support analysts or teams reviewing call recordings
 
 ## Target Personas
 | Persona | Pain Point | Goal |
 |---|---|---|
-| Support Analyst | Long call recordings are time-consuming to review | Get concise summaries and key points fast |
-| QA/Training Lead | Needs evidence of agent performance and customer sentiment | Extract actions taken and sentiment cues |
-| Manager | Limited time to scan call details | High-level understanding of issues and outcomes |
+| Support Analyst | Long call recordings are time-consuming to review | Get structured summaries and key issues fast |
+| Team Lead | Needs quick insights from customer calls | Review summaries and sentiment for coaching |
+| QA Reviewer | Must audit call quality | Search transcript via Q&A for specific details |
 
 ## MVP Scope
 In Scope:
-- Upload audio/video files in Streamlit
-- Transcription via ElevenLabs with diarization
-- Structured summary via Gemini LLM
-- Q&A chat over transcript/summary
-- Token usage tracking for ElevenLabs
+- Upload audio/video file in Streamlit UI
+- Transcribe using ElevenLabs (with diarization)
+- Summarize transcript via Gemini with structured sections
+- Chat Q&A using transcript and summary
+- Token usage tracking for transcription time
 
 Out of Scope:
-- Auth/login or user management
-- Persistent storage of transcripts/summaries
+- User authentication or roles
+- Persistent storage for transcripts/summaries
 - Batch processing or job queues
-- Multi-usecase workflows beyond audio summarizer
+- Removing ffmpeg dependency for video
 
 ## Strategic Constraints
 | Constraint | Reason |
 |---|---|
-| Requires GEMINI_API_KEY and ELEVENLABS_API_KEY | External API dependencies |
-| ffmpeg needed for video processing | moviepy relies on ffmpeg |
-| Session-state only storage | AGENTS.md restriction |
-| Streamlit UI only | App entrypoint is app.py running Streamlit |
+| Requires GEMINI_API_KEY and ELEVENLABS_API_KEY | External LLM and transcription services |
+| ffmpeg required for video processing | moviepy depends on ffmpeg |
+| No persistent data storage | AGENTS.md: session_state only; no DB |
+| Streamlit UI only | app.py entry point is Streamlit |
