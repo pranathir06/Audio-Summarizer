@@ -4,33 +4,31 @@
 - LangGraph (langgraph) for orchestration
 - Google Gemini via langchain-google-genai
 - ElevenLabs speech_to_text
-- moviepy, mutagen; ffmpeg (external)
+- moviepy, mutagen, ffmpeg (external)
 - python-dotenv
-- pytest (runner listed, but tests n/a)
 
 ## Project Structure
-- app.py — Streamlit entry; calls load_langgraph_agenticai_app()
+- app.py — Streamlit entry point; calls load_langgraph_agenticai_app()
+- src/audiosummarizer/LLMS/geminillm.py — Gemini client config (GEMINI_API_KEY/GEMINI_MODEL)
+- src/audiosummarizer/graph/audio_graph.py — LangGraph builder
+- src/audiosummarizer/nodes/ — graph node implementations (transcribe/summarize)
 - src/audiosummarizer/state/audio_state.py — AudioAnalysisState schema
-- src/audiosummarizer/graph/audio_graph.py — AudioGraphBuilder.setup_graph()
-- src/audiosummarizer/nodes/ — LangGraph node implementations (transcribe/summarize)
-- src/audiosummarizer/LLMS/geminillm.py — Gemini client/config
-- src/audiosummarizer/ui/ — Streamlit UI logic and components
+- src/audiosummarizer/ui/ — Streamlit UI config & components
 - src/audiosummarizer/utils/token_tracker.py — ElevenLabs token usage tracking
-- src/audiosummarizer/ui/uiconfigfile.ini — UI options/config
 
 ## How to Run Tests
 n/a
 
 ## Conventions
-- Keep Streamlit UI logic inside src/audiosummarizer/ui; graph logic in graph/ and nodes/
-- Respect AudioAnalysisState field names/types when passing state
-- Require GEMINI_API_KEY and ELEVENLABS_API_KEY before external API calls
-- Use Streamlit try/except error handling in UI flows
-- Store transcripts/summaries only in Streamlit session_state
+- Keep Streamlit UI logic in `ui/`; graph logic in `graph/` and `nodes/`.
+- Use `AudioAnalysisState` fields exactly as defined (audio_path, transcript, summary, audio_duration_seconds).
+- Add try/except error handling in UI flows (Streamlit).
+- Require `GEMINI_API_KEY` and `ELEVENLABS_API_KEY` before external API calls.
+- Store transcripts/summaries only in `st.session_state` (no persistence).
 
 ## What NOT to Do
-- Do not commit .env files or API keys
-- Do not add persistent storage for transcripts/summaries
-- Do not bypass API key checks for Gemini/ElevenLabs
-- Do not move UI logic into graph/nodes or vice versa
-- Do not remove ffmpeg-based video handling requirements
+- Do not commit API keys or .env files.
+- Do not add persistent storage for transcripts/summaries.
+- Do not bypass ffmpeg requirements for video handling.
+- Do not introduce new entry points besides Streamlit `app.py`.
+- Do not mix UI code into graph/node modules.
