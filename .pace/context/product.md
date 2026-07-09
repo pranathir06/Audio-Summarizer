@@ -1,30 +1,31 @@
 ## Vision
-Purpose: Transcribe customer call audio/video, summarize key points, enable Q&A
-Users: Customer support analysts handling recorded calls
+Purpose: Transcribe customer audio calls, generate AI summaries, and enable Q&A about call content
+Users: Customer support analysts / teams handling call recordings
 
 ## Target Personas
 | Persona | Pain Point | Goal |
 |---|---|---|
-| Support Analyst | Manual note-taking from calls | Get structured summaries fast |
-| QA Reviewer | Hard to find issues in long calls | Ask targeted questions on transcript |
-| Team Lead | Inconsistent call documentation | Standardized call summaries |
+| Support Analyst | Long call recordings take time to review | Get structured summaries fast |
+| Support Manager | Needs insights from calls for QA | Review key issues, actions, sentiment |
+| Agent | Needs details from a call | Ask questions about transcript content |
 
 ## MVP Scope
 In Scope:
-- Audio/video upload in Streamlit UI
-- ElevenLabs transcription with diarization
-- Gemini-based structured summary
-- Chat Q&A on transcript/summary
-- Token usage display for ElevenLabs credits
-
+- Upload audio/video files via Streamlit
+- Transcribe using ElevenLabs (diarized speaker labels)
+- Summarize transcript with structured bullets
+- Chat Q&A using transcript + summary
+- Token usage tracking for ElevenLabs
 Out of Scope:
-- Authentication or user management
 - Persistent storage of transcripts/summaries
+- User authentication/authorization
 - Batch processing or job queues
-- Non-Gemini LLM providers
+- Replacing ffmpeg for video handling
 
 ## Strategic Constraints
 | Constraint | Reason |
 |---|---|
-| Requires GEMINI_API_KEY and ELEVENLABS_API_KEY | External LLM and transcription APIs |
-| ffmpeg required for video processing | moviepy dependency for video |
+| Require GEMINI_API_KEY and ELEVENLABS_API_KEY | External API access in geminillm.py/transcribe_node.py |
+| Use Streamlit UI | app.py entry point + UI modules |
+| No persistent storage | AGENTS.md: session_state only |
+| ffmpeg required for video | README.md + transcribe_node.py error handling |
