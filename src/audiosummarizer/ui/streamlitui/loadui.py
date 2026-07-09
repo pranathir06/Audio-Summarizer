@@ -25,6 +25,17 @@ class LoadStreamlitUI:
                 "Choose an audio or video file", 
                 type=['mp3', 'wav', 'm4a', 'flac', 'aac', 'ogg', 'mp4', 'mov', 'avi', 'mkv'], 
                 help="Upload an audio or video file to summarize")
+            st.markdown(
+                """
+                <style>
+                [data-testid="stSidebar"] .stButton > button {
+                    font-size: 1.05rem;
+                    padding: 0.65rem 1.25rem;
+                }
+                </style>
+                """,
+                unsafe_allow_html=True
+            )
             self.user_controls["process_clicked"] = st.button(
                     "🚀 Process Audio File",
                     
