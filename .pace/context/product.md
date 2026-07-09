@@ -1,25 +1,27 @@
 ## Vision
-Purpose: Transcribe customer audio calls, summarize them, and enable Q&A on the content
-Users: Customer support analysts or teams reviewing customer calls
+Purpose: Transcribe customer audio calls, generate summaries, enable Q&A on audio content
+Users: Streamlit users uploading customer audio/video files for summarization
+
 ## Target Personas
 | Persona | Pain Point | Goal |
 |---|---|---|
-| Support Analyst | Long calls to review manually | Get structured summaries and key points fast |
-| Support Manager | Need insights from call content | Ask questions about transcript/summary |
-| QA/Compliance Reviewer | Hard to scan full audio | Access transcript with speaker labels |
+| Customer support analyst | Manual review of call recordings | Get transcript and structured summary quickly |
+| QA/review user | Hard to search call content | Ask questions about the call via chat |
+
 ## MVP Scope
 In Scope:
-- Audio/video upload via Streamlit
+- Audio/video file upload in Streamlit UI
 - ElevenLabs transcription with diarization
-- Gemini-generated structured summaries
-- Interactive chat Q&A over transcript/summary
+- Gemini-based structured summary
+- Interactive chat over transcript/summary
 Out of Scope:
 - Persistent storage of transcripts/summaries
-- Multi-user auth or accounts
-- Non-Streamlit UI
+- Non-Streamlit entry points
+
 ## Strategic Constraints
 | Constraint | Reason |
 |---|---|
-| Require GEMINI_API_KEY and ELEVENLABS_API_KEY env vars | External API usage in Gemini/ElevenLabs clients |
-| ffmpeg required for video processing | moviepy depends on ffmpeg for video/audio extraction |
-| No persistent storage for transcripts/summaries | AGENTS.md constraint |
+| GEMINI_API_KEY required | Gemini LLM calls in GeminiLLM |
+| ELEVENLABS_API_KEY required | ElevenLabs transcription in transcribe_node |
+| ffmpeg required for video | moviepy uses ffmpeg for video/audio extraction |
+| Streamlit app entry only (app.py) | AGENTS.md guidance |
