@@ -1,32 +1,30 @@
 ## Vision
-Purpose: Transcribe customer audio calls, summarize key points, and answer questions about the call
-Users: Customer support analysts, QA reviewers, and ops teams working with call recordings
+Purpose: Transcribe customer call audio/video, summarize key points, enable Q&A
+Users: Customer support analysts handling recorded calls
 
 ## Target Personas
 | Persona | Pain Point | Goal |
 |---|---|---|
-| Support Analyst | Manual note-taking from long calls | Get structured summaries quickly |
-| QA Reviewer | Hard to audit large volumes of calls | Extract key issues and actions fast |
-| Ops Manager | Need searchable insights from calls | Ask follow-up questions on call content |
+| Support Analyst | Manual note-taking from calls | Get structured summaries fast |
+| QA Reviewer | Hard to find issues in long calls | Ask targeted questions on transcript |
+| Team Lead | Inconsistent call documentation | Standardized call summaries |
 
 ## MVP Scope
 In Scope:
-- Upload audio/video files in Streamlit UI
-- Transcribe via ElevenLabs with speaker labels
-- Summarize via Gemini into structured sections
-- Chat Q&A based on transcript + summary
-- Token usage tracking for ElevenLabs seconds
+- Audio/video upload in Streamlit UI
+- ElevenLabs transcription with diarization
+- Gemini-based structured summary
+- Chat Q&A on transcript/summary
+- Token usage display for ElevenLabs credits
 
 Out of Scope:
-- Authentication or user accounts
-- Persistent storage of transcripts/summaries beyond session_state
+- Authentication or user management
+- Persistent storage of transcripts/summaries
 - Batch processing or job queues
-- Additional LLM providers beyond Gemini
+- Non-Gemini LLM providers
 
 ## Strategic Constraints
 | Constraint | Reason |
 |---|---|
-| GEMINI_API_KEY required | GeminiLLM enforces API key check |
-| ELEVENLABS_API_KEY required | Transcription uses ElevenLabs API |
-| ffmpeg required for video | moviepy relies on ffmpeg for video handling |
-| No long-term storage | AGENTS.md prohibits persistent storage for transcripts/summaries |
+| Requires GEMINI_API_KEY and ELEVENLABS_API_KEY | External LLM and transcription APIs |
+| ffmpeg required for video processing | moviepy dependency for video |
