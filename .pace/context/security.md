@@ -1,25 +1,21 @@
 ## Sensitive Data
 | Data | Where Stored | Protection |
 |---|---|---|
-| GEMINI_API_KEY | Environment variable | Required at runtime (geminillm.py) |
-| ELEVENLABS_API_KEY | Environment variable | Required at runtime (transcribe_node.py) |
-| Audio files | Temp files on disk | Temporary file paths via tempfile; not persisted in app storage |
-| Transcripts/Summaries | Streamlit session_state | In-memory session state only |
-| ElevenLabs token usage | ~/.elevenlabs_token_usage.json | Local file in user home (token_tracker.py) |
-
+| GEMINI_API_KEY | Environment variable | Not committed; read via dotenv/env |
+| ELEVENLABS_API_KEY | Environment variable | Not committed; read via dotenv/env |
+| Audio transcript/summary | Streamlit session state | In-memory only; no persistence |
+| Token usage file | ~/.elevenlabs_token_usage.json | Local file in user home directory |
 ## Trust Boundaries
 | Caller | Callee | Auth Method |
 |---|---|---|
-| Streamlit app | Google Gemini API | API key via GEMINI_API_KEY |
-| Streamlit app | ElevenLabs API | API key via ELEVENLABS_API_KEY |
-
+| Streamlit app | Gemini API (langchain-google-genai) | API key in GEMINI_API_KEY |
+| Streamlit app | ElevenLabs speech_to_text | API key in ELEVENLABS_API_KEY |
 ## Security Requirements
-- Do not commit .env files or API keys (AGENTS.md)
-- Require GEMINI_API_KEY and ELEVENLABS_API_KEY before external calls
-- Keep transcripts/summaries in session_state only (no persistent storage)
-
+- Do not commit API keys or .env files
+- Require GEMINI_API_KEY before LLM calls
+- Require ELEVENLABS_API_KEY before transcription
+- No persistent storage for transcripts/summaries
 ## Security Checklist
-Env keys present: fail
-API keys committed: fail
-Persistent transcript storage: fail
-ffmpeg installed for video: fail
+API keys stored in env vars: pass
+Transcripts persisted to disk: fail (must remain in session state)
+ffmpeg required for video processing: pass
