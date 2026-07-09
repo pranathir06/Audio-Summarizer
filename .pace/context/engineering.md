@@ -2,65 +2,64 @@
 language: python
 package_manager: pip
 test_runner: pytest
-test_command: "n/a"
-test_file_pattern: "n/a"
+test_command: "pytest"
+test_file_pattern: "tests/**/*.py"
 require_tests: false
 ---
 ## Module Map
 | Directory | Language | Purpose |
 |---|---|---|
-| . | Python | Streamlit entry point and repo metadata |
-| src/audiosummarizer | Python | Audio summarizer package root |
-| src/audiosummarizer/LLMS | Python | LLM client wrappers (Gemini) |
-| src/audiosummarizer/graph | Python | LangGraph construction |
-| src/audiosummarizer/nodes | Python | LangGraph node implementations |
-| src/audiosummarizer/state | Python | Typed state schema |
-| src/audiosummarizer/ui | Python | UI config and Streamlit UI package |
+| app.py | Python | Streamlit entry point invoking load_langgraph_agenticai_app |
+| src/audiosummarizer | Python | Core audio summarization package |
+| src/audiosummarizer/LLMS | Python | Gemini LLM client setup |
+| src/audiosummarizer/graph | Python | LangGraph builder for audio flow |
+| src/audiosummarizer/nodes | Python | Graph node implementations (file, transcribe, summarize) |
+| src/audiosummarizer/state | Python | Typed state schema for graph |
+| src/audiosummarizer/ui | Python | UI config and wrappers |
 | src/audiosummarizer/ui/streamlitui | Python | Streamlit UI components |
-| src/audiosummarizer/utils | Python | Utilities (token tracking) |
+| src/audiosummarizer/utils | Python | Token usage tracking |
 
 ## Tech Stack
 | Component | Technology |
 |---|---|
 | UI | Streamlit |
-| Orchestration | LangGraph (langgraph) |
-| LLM | Google Gemini via langchain-google-genai |
+| LLM Orchestration | LangGraph, LangChain |
+| LLM Provider | Google Gemini (langchain-google-genai) |
 | Transcription | ElevenLabs speech_to_text |
-| Audio/Video | moviepy, mutagen, ffmpeg (external) |
-| Env Config | python-dotenv |
+| Media Processing | moviepy, mutagen, ffmpeg (external) |
+| Config/Env | python-dotenv |
 
 ## System Architecture
-| Step | Component | Interaction |
-|---|---|---|
-| 1 | app.py | Calls load_langgraph_agenticai_app() |
-| 2 | LoadStreamlitUI | Collects file upload + process click; shows token usage |
-| 3 | AudioGraphBuilder | Builds LangGraph: audio_file → transcribe → summarize |
-| 4 | transcribe_node | Calls ElevenLabs API; extracts audio if video |
-| 5 | summarize_node | Calls Gemini LLM with structured prompt |
-| 6 | DisplayResultStreamlit | Renders transcript, summary, and chat |
-| 7 | ChatInterface | Answers Q&A using transcript + summary via Gemini |
+| Flow | Details |
+|---|---|
+| UI → Processing | LoadStreamlitUI collects file + click; main._process_audio_file runs graph |
+| Graph | START → audio_file → transcribe → summarize → END |
+| Transcription | transcribe_node calls ElevenLabs; diarization formatted into transcript string |
+| Summarization | summarize_node prompts Gemini to generate structured summary |
+| Chat | ChatInterface uses stored transcript/summary to answer questions via Gemini |
+| State | AudioAnalysisState: audio_path, transcript, summary, audio_duration_seconds |
 
 ## Key Interfaces & Contracts
-| Interface | Location | Details |
-|---|---|---|
-| Streamlit entry | app.py | load_langgraph_agenticai_app() |
-| State schema | src/audiosummarizer/state/audio_state.py | AudioAnalysisState: audio_path, transcript, summary, audio_duration_seconds |
-| Graph build | src/audiosummarizer/graph/audio_graph.py | AudioGraphBuilder.setup_graph(usecase) |
-| LLM config | src/audiosummarizer/LLMS/geminillm.py | GEMINI_API_KEY, GEMINI_MODEL (default gemini-2.5-flash) |
-| UI config | src/audiosummarizer/ui/uiconfigfile.ini | PAGE_TITLE, LLM_OPTIONS, USECASE_OPTIONS |
-| Token tracking | src/audiosummarizer/utils/token_tracker.py | ~/.elevenlabs_token_usage.json |
+| Interface | Contract |
+|---|---|
+| Entry point | app.py → load_langgraph_agenticai_app() |
+| Env Vars | GEMINI_API_KEY, GEMINI_MODEL (optional), ELEVENLABS_API_KEY |
+| Graph State | AudioAnalysisState TypedDict fields must exist |
+| Token Tracking | ~/.elevenlabs_token_usage.json stores used/remaining seconds |
+| UI Config | ui/uiconfigfile.ini with PAGE_TITLE, LLM_OPTIONS, USECASE_OPTIONS |
 
 ## Coding Conventions
 | Rule | Source |
 |---|---|
-| Use Streamlit error handling with try/except in UI flows | AGENTS.md |
-| Keep Streamlit UI logic in ui/ modules; graph logic in graph/ and nodes/ | AGENTS.md |
-| Respect AudioAnalysisState fields and names | AGENTS.md / audio_state.py |
-| Require GEMINI_API_KEY and ELEVENLABS_API_KEY before external APIs | AGENTS.md / geminillm.py / transcribe_node.py |
+| Keep UI logic in ui/; graph logic in graph/ and nodes/ | AGENTS.md |
+| Use AudioAnalysisState fields exactly as defined | AGENTS.md |
+| Add try/except error handling in UI flows | AGENTS.md |
+| Require GEMINI_API_KEY and ELEVENLABS_API_KEY before API calls | AGENTS.md |
+| Store transcripts/summaries only in st.session_state | AGENTS.md |
 
 ## Test Patterns
 | Item | Details |
 |---|---|
-| Test status | No test infrastructure documented (AGENTS.md: "How to Run Tests n/a") |
-| Expected command | n/a |
-| Test files | n/a |
+| Tests Present | No test files found |
+| Runner | pytest (not configured) |
+| Guidance | Add tests before enabling require_tests true |
