@@ -1,26 +1,28 @@
 ## Sensitive Data
 | Data | Where Stored | Protection |
 |---|---|---|
-| Audio/video uploads | Temp files on disk | OS temp files; no persistence beyond session |
-| Transcripts/summaries | Streamlit session_state | In-memory session; no DB |
-| ElevenLabs token usage | ~/.elevenlabs_token_usage.json | Local user file |
-| API keys | Environment variables | Not stored in repo |
+| GEMINI_API_KEY | Environment variable | python-dotenv loads from env; not in repo |
+| ELEVENLABS_API_KEY | Environment variable | python-dotenv loads from env; not in repo |
+| Transcripts | Streamlit session_state | In-memory only; no persistent store in code |
+| Summaries | Streamlit session_state | In-memory only; no persistent store in code |
+| ElevenLabs token usage | ~/.elevenlabs_token_usage.json | Local user home file |
 
 ## Trust Boundaries
 | Caller | Callee | Auth Method |
 |---|---|---|
-| Streamlit app | ElevenLabs API | ELEVENLABS_API_KEY env var |
-| Streamlit app | Google Gemini API | GEMINI_API_KEY env var |
+| Streamlit app | Gemini API (Google) | API key via GEMINI_API_KEY |
+| Streamlit app | ElevenLabs API | API key via ELEVENLABS_API_KEY |
 
 ## Security Requirements
-- Do not commit .env files or API keys
-- Require GEMINI_API_KEY and ELEVENLABS_API_KEY before external calls
-- Keep transcripts/summaries in session_state only (no persistence)
-- ffmpeg must be installed for video processing (external dependency)
+- Do not commit .env files or API keys (AGENTS.md)
+- Require GEMINI_API_KEY before LLM calls (GeminiLLM)
+- Require ELEVENLABS_API_KEY before transcription (transcribe_node)
+- Do not persist transcripts/summaries beyond session_state (AGENTS.md)
+- ffmpeg must be installed separately for video processing
 
 ## Security Checklist
-API keys sourced from env: pass
-No auth system present: fail
-Persistent transcript storage: pass
-Temp audio cleanup after video extraction: pass
-Token usage file stored in user home: pass
+- API keys stored only in env vars: pass
+- No auth/user management implemented: pass
+- Persistent transcript storage present: fail
+- Token usage file stored in user home: pass
+- External calls gated by API keys: pass
