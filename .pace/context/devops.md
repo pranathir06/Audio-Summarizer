@@ -1,19 +1,15 @@
 ## CI/CD
 | Trigger | Workflow | Jobs |
 |---|---|---|
-| None | .github/workflows not present | n/a |
-
+| n/a | None found in .github/workflows | n/a |
 ## Environment Variables
 | Name | Required | Purpose |
 |---|---|---|
-| GEMINI_API_KEY | Yes | Gemini LLM access (geminillm.py) |
-| ELEVENLABS_API_KEY | Yes | ElevenLabs transcription (transcribe_node.py) |
+| GEMINI_API_KEY | Yes | Authenticate Gemini LLM calls |
 | GEMINI_MODEL | No | Select Gemini model (default gemini-2.5-flash) |
-
+| ELEVENLABS_API_KEY | Yes | Authenticate ElevenLabs transcription |
 ## Local Dev
 1. pip install -r requirements.txt
-2. export GEMINI_API_KEY=... && export ELEVENLABS_API_KEY=...
-3. streamlit run app.py
-
+2. streamlit run app.py
 ## Deployment
-Deploy: streamlit run app.py (no deployment scripts found)
+Deploy: Streamlit app (streamlit run app.py)
