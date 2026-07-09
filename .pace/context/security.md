@@ -1,26 +1,26 @@
 ## Sensitive Data
 | Data | Where Stored | Protection |
 |---|---|---|
-| GEMINI_API_KEY | Environment variable | Required at runtime; not in repo |
-| ELEVENLABS_API_KEY | Environment variable | Required at runtime; not in repo |
-| Audio files | Temp files on disk | Stored in OS temp; deleted after processing (video extraction) |
-| Transcript/Summary | Streamlit session_state | In-memory per session |
+| GEMINI_API_KEY | Environment variable | Not committed; required at runtime |
+| ELEVENLABS_API_KEY | Environment variable | Not committed; required at runtime |
+| Transcripts/summaries | Streamlit session_state | In-memory session only |
 | Token usage | ~/.elevenlabs_token_usage.json | Local file in user home |
+| Uploaded audio | Temp file on disk | Temporary file path in /tmp or NamedTemporaryFile |
 
 ## Trust Boundaries
 | Caller | Callee | Auth Method |
 |---|---|---|
-| UI (Streamlit) | Gemini API via langchain-google-genai | API key in env |
-| UI (Streamlit) | ElevenLabs speech_to_text | API key in env |
+| App | Google Gemini API | API key (GEMINI_API_KEY) |
+| App | ElevenLabs API | API key (ELEVENLABS_API_KEY) |
 
 ## Security Requirements
-- Do not commit .env or API keys (AGENTS.md)
-- Require GEMINI_API_KEY before GeminiLLM init (GeminiLLM)
-- Require ELEVENLABS_API_KEY before transcription (transcribe_node)
-- No persistent storage for transcripts/summaries beyond session_state (AGENTS.md)
+- Do not commit .env files or API keys
+- Require GEMINI_API_KEY and ELEVENLABS_API_KEY before external API calls
+- Avoid persistent storage for transcripts/summaries (session_state only)
+- Keep token usage file in user home only
 
 ## Security Checklist
-API keys stored only in env: pass
-Transcript persistence disabled: pass
-Token usage file limited to local home dir: pass
-ffmpeg dependency acknowledged for video processing: pass
+API keys sourced from env vars only: pass
+No auth/user accounts implemented: pass
+Transcript/summary persistence avoided: pass
+Temp files used for uploads: pass
