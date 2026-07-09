@@ -1,33 +1,33 @@
 ## Tech Stack
-- Python (pip)
+- Python
 - Streamlit (UI)
 - LangGraph (orchestration)
 - Google Gemini via langchain-google-genai (LLM)
 - ElevenLabs speech_to_text (transcription)
-- moviepy, mutagen, ffmpeg (audio/video processing)
+- moviepy, mutagen, ffmpeg (media processing)
 - python-dotenv (env config)
 
 ## Project Structure
-- app.py: Streamlit entry point calling load_langgraph_agenticai_app()
-- src/audiosummarizer/graph/audio_graph.py: LangGraph builder (audio_file → transcribe → summarize)
-- src/audiosummarizer/nodes/: graph node implementations
-- src/audiosummarizer/state/audio_state.py: AudioAnalysisState schema
-- src/audiosummarizer/ui/: Streamlit UI components and config
-- src/audiosummarizer/LLMS/: LLM client wrappers
-- src/audiosummarizer/utils/: token usage tracking
+- app.py — Streamlit entry point.
+- src/audiosummarizer/graph/audio_graph.py — builds LangGraph pipeline.
+- src/audiosummarizer/nodes/ — transcribe/summarize node implementations.
+- src/audiosummarizer/state/audio_state.py — AudioAnalysisState schema.
+- src/audiosummarizer/LLMS/ — Gemini LLM wrapper.
+- src/audiosummarizer/ui/ — Streamlit UI modules + config.
+- src/audiosummarizer/utils/token_tracker.py — ElevenLabs usage tracking.
 
 ## How to Run Tests
 n/a
 
 ## Conventions
-- Use Streamlit error handling (st.error/st.warning) with try/except in UI flows.
-- Respect AudioAnalysisState fields: audio_path, transcript, summary, audio_duration_seconds.
-- Require GEMINI_API_KEY and ELEVENLABS_API_KEY before invoking external APIs.
-- Persist token usage via TokenTracker (JSON in user home).
-- Keep Streamlit UI logic in ui/ modules; graph logic in graph/ and nodes/.
+- Keep UI logic in `src/audiosummarizer/ui/`; graph logic in `graph/` and `nodes/`.
+- Use `st.error`/`st.warning` for UI-facing errors in try/except blocks.
+- Require `GEMINI_API_KEY` before Gemini calls and `ELEVENLABS_API_KEY` before transcription.
+- Respect `AudioAnalysisState` fields when reading/writing state.
+- Persist ElevenLabs usage via `TokenTracker` JSON in user home.
 
 ## What NOT to Do
-- Do not commit .env files or API keys.
 - Do not add persistent storage for transcripts/summaries (session_state only).
-- Do not introduce batch processing, job queues, or auth features.
-- Do not remove ffmpeg dependency for video handling.
+- Do not commit API keys or `.env` files.
+- Do not bypass `TokenTracker` when recording ElevenLabs usage.
+- Do not mix UI concerns into graph/node modules (or vice versa).
