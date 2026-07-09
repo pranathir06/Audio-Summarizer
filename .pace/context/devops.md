@@ -1,20 +1,19 @@
 ## CI/CD
 | Trigger | Workflow | Jobs |
 |---|---|---|
-| n/a | n/a | n/a |
+| None | None | None |
 
 ## Environment Variables
 | Name | Required | Purpose |
 |---|---|---|
-| GEMINI_API_KEY | yes | Gemini API access |
-| ELEVENLABS_API_KEY | yes | ElevenLabs transcription |
-| GEMINI_MODEL | no | Override default Gemini model |
+| GEMINI_API_KEY | Yes | Google Gemini API access |
+| ELEVENLABS_API_KEY | Yes | ElevenLabs transcription |
+| GEMINI_MODEL | No | Override Gemini model name |
 
 ## Local Dev
 1. pip install -r requirements.txt
-2. export GEMINI_API_KEY=... (or set in env)
-3. export ELEVENLABS_API_KEY=...
-4. streamlit run app.py
+2. export GEMINI_API_KEY=... && export ELEVENLABS_API_KEY=...
+3. streamlit run app.py
 
 ## Deployment
-Deploy: Streamlit app (run app.py)
+Deploy: Streamlit app run via `streamlit run app.py` (devcontainer auto-runs)
