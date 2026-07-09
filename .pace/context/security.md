@@ -1,28 +1,25 @@
 ## Sensitive Data
 | Data | Where Stored | Protection |
 |---|---|---|
-| GEMINI_API_KEY | Environment variable | python-dotenv loads from env; not in repo |
-| ELEVENLABS_API_KEY | Environment variable | python-dotenv loads from env; not in repo |
-| Transcripts | Streamlit session_state | In-memory only; no persistent store in code |
-| Summaries | Streamlit session_state | In-memory only; no persistent store in code |
-| ElevenLabs token usage | ~/.elevenlabs_token_usage.json | Local user home file |
+| GEMINI_API_KEY | Environment variable | Not in repo; loaded via dotenv |
+| ELEVENLABS_API_KEY | Environment variable | Not in repo; loaded via dotenv |
+| Audio/video files | Temporary file in OS temp dir | Deleted after processing; retained for chat session |
+| Transcript/summary | Streamlit session_state | In-memory per session |
+| Token usage data | ~/.elevenlabs_token_usage.json | Local file in user home |
 
 ## Trust Boundaries
 | Caller | Callee | Auth Method |
 |---|---|---|
-| Streamlit app | Gemini API (Google) | API key via GEMINI_API_KEY |
-| Streamlit app | ElevenLabs API | API key via ELEVENLABS_API_KEY |
+| Streamlit app | Google Gemini API | API key (GEMINI_API_KEY) |
+| Streamlit app | ElevenLabs speech_to_text | API key (ELEVENLABS_API_KEY) |
 
 ## Security Requirements
-- Do not commit .env files or API keys (AGENTS.md)
-- Require GEMINI_API_KEY before LLM calls (GeminiLLM)
-- Require ELEVENLABS_API_KEY before transcription (transcribe_node)
-- Do not persist transcripts/summaries beyond session_state (AGENTS.md)
-- ffmpeg must be installed separately for video processing
+- Do not commit .env files or API keys
+- Require GEMINI_API_KEY and ELEVENLABS_API_KEY before API calls
+- Do not add persistent storage for transcripts/summaries
 
 ## Security Checklist
-- API keys stored only in env vars: pass
-- No auth/user management implemented: pass
-- Persistent transcript storage present: fail
-- Token usage file stored in user home: pass
-- External calls gated by API keys: pass
+No API keys in repo: pass
+External APIs require keys: pass
+Local token file stored in home dir: pass
+Session-only transcript storage: pass
