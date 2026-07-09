@@ -1,5 +1,5 @@
 ## Tech Stack
-- Python
+- Python (pip)
 - Streamlit (UI)
 - LangGraph (orchestration)
 - Google Gemini via langchain-google-genai (LLM)
@@ -10,24 +10,26 @@
 ## Project Structure
 - app.py: Streamlit entry point.
 - src/audiosummarizer/graph/audio_graph.py: builds LangGraph pipeline.
-- src/audiosummarizer/nodes/: transcribe_node and summarize_node logic.
+- src/audiosummarizer/nodes/: transcribe_node & summarize_node logic.
 - src/audiosummarizer/state/audio_state.py: AudioAnalysisState schema.
-- src/audiosummarizer/LLMS/geminillm.py: Gemini wrapper.
-- src/audiosummarizer/ui/streamlitui/: UI screens + chat interface.
-- src/audiosummarizer/ui/uiconfigfile.ini: UI config.
+- src/audiosummarizer/ui/: UI config and Streamlit screens.
+- src/audiosummarizer/ui/streamlitui/chat_interface.py: Q&A over transcript/summary.
+- src/audiosummarizer/LLMS/: Gemini wrapper.
 - src/audiosummarizer/utils/token_tracker.py: ElevenLabs usage tracking.
 
 ## How to Run Tests
 n/a
 
 ## Conventions
-- Keep UI logic in src/audiosummarizer/ui and graph logic in graph/ and nodes/.
-- Require GEMINI_API_KEY and ELEVENLABS_API_KEY before API calls.
-- Use AudioAnalysisState fields consistently (audio_path, transcript, summary, audio_duration_seconds).
-- In Streamlit UI, handle failures with st.error/st.warning.
+- Keep UI logic in `ui/` and graph/node logic in `graph/`/`nodes/`.
+- Require `GEMINI_API_KEY` and `ELEVENLABS_API_KEY` before API calls.
+- Use `st.error`/`st.warning` for UI error handling in try/except.
+- Respect `AudioAnalysisState` fields when passing state.
+- Persist ElevenLabs usage via `TokenTracker` JSON in user home.
 
 ## What NOT to Do
-- Do not commit API keys or .env files.
-- Do not persist transcripts/summaries outside Streamlit session_state.
-- Do not move chat/summary logic into UI modules or vice versa.
-- Do not bypass TokenTracker when recording ElevenLabs usage.
+- Do not store transcripts/summaries outside Streamlit `session_state`.
+- Do not commit `.env` files or API keys.
+- Do not add auth/login or persistent storage features (out of scope).
+- Do not bypass ffmpeg-based media handling for video inputs.
+- Do not scatter UI logic into graph/nodes modules.
