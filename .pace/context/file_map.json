@@ -2,42 +2,36 @@
   "version": 1,
   "language": "python",
   "entry_points": {
-    "streamlit_app": "app.py"
+    "app": "app.py"
   },
   "modules": [
     {
       "dir": ".",
-      "purpose": "Project entry point and documentation",
+      "purpose": "Project root config and entry point",
       "files": [
         {
-          "path": "app.py",
-          "purpose": "Streamlit entry point calling app loader",
-          "key_symbols": ["load_langgraph_agenticai_app"]
-        },
-        {
           "path": "README.md",
-          "purpose": "User setup and usage instructions",
-          "key_symbols": []
-        },
-        {
-          "path": "requirements.txt",
-          "purpose": "Python dependencies list",
+          "purpose": "Project overview, features, and run instructions",
           "key_symbols": []
         },
         {
           "path": "AGENTS.md",
-          "purpose": "Agent guidance and conventions",
+          "purpose": "Engineering conventions and constraints",
           "key_symbols": []
-        }
-      ]
-    },
-    {
-      "dir": ".devcontainer",
-      "purpose": "Devcontainer configuration",
-      "files": [
+        },
+        {
+          "path": "requirements.txt",
+          "purpose": "Python dependencies",
+          "key_symbols": []
+        },
+        {
+          "path": "app.py",
+          "purpose": "Streamlit entry point calling load_langgraph_agenticai_app",
+          "key_symbols": ["load_langgraph_agenticai_app"]
+        },
         {
           "path": ".devcontainer/devcontainer.json",
-          "purpose": "Devcontainer image and post-attach commands",
+          "purpose": "Devcontainer setup and streamlit postAttachCommand",
           "key_symbols": []
         }
       ]
@@ -64,19 +58,19 @@
         },
         {
           "path": "src/audiosummarizer/main.py",
-          "purpose": "Streamlit app loader and processing flow",
+          "purpose": "Streamlit app controller and audio processing flow",
           "key_symbols": ["load_langgraph_agenticai_app", "_process_audio_file"]
         },
         {
           "path": "src/audiosummarizer/langgraph.json",
-          "purpose": "LangGraph config",
+          "purpose": "LangGraph configuration metadata",
           "key_symbols": []
         }
       ]
     },
     {
       "dir": "src/audiosummarizer/graph",
-      "purpose": "LangGraph graph builder",
+      "purpose": "LangGraph workflow builder",
       "files": [
         {
           "path": "src/audiosummarizer/graph/__init__.py",
@@ -85,8 +79,8 @@
         },
         {
           "path": "src/audiosummarizer/graph/audio_graph.py",
-          "purpose": "Builds audio summarization graph",
-          "key_symbols": ["AudioGraphBuilder"]
+          "purpose": "Defines AudioGraphBuilder and graph wiring",
+          "key_symbols": ["AudioGraphBuilder", "audio_summarizer_build_graph", "setup_graph"]
         }
       ]
     },
@@ -101,7 +95,7 @@
         },
         {
           "path": "src/audiosummarizer/nodes/audio_file_node.py",
-          "purpose": "Audio file pass-through node",
+          "purpose": "Audio file passthrough node",
           "key_symbols": ["AudioFileNode"]
         },
         {
@@ -118,7 +112,7 @@
     },
     {
       "dir": "src/audiosummarizer/state",
-      "purpose": "State schema for graph",
+      "purpose": "Typed state schema",
       "files": [
         {
           "path": "src/audiosummarizer/state/__init__.py",
@@ -127,14 +121,14 @@
         },
         {
           "path": "src/audiosummarizer/state/audio_state.py",
-          "purpose": "Typed state for audio analysis",
+          "purpose": "AudioAnalysisState TypedDict",
           "key_symbols": ["AudioAnalysisState"]
         }
       ]
     },
     {
       "dir": "src/audiosummarizer/LLMS",
-      "purpose": "LLM client wrappers",
+      "purpose": "LLM client wrapper",
       "files": [
         {
           "path": "src/audiosummarizer/LLMS/__init__.py",
@@ -143,8 +137,8 @@
         },
         {
           "path": "src/audiosummarizer/LLMS/geminillm.py",
-          "purpose": "Gemini LLM wrapper",
-          "key_symbols": ["GeminiLLM"]
+          "purpose": "GeminiLLM wrapper using ChatGoogleGenerativeAI",
+          "key_symbols": ["GeminiLLM", "get_llm"]
         }
       ]
     },
@@ -154,30 +148,19 @@
       "files": [
         {
           "path": "src/audiosummarizer/utils/__init__.py",
-          "purpose": "Utils package marker",
+          "purpose": "Package marker",
           "key_symbols": []
         },
         {
           "path": "src/audiosummarizer/utils/token_tracker.py",
-          "purpose": "ElevenLabs token usage tracker",
-          "key_symbols": ["TokenTracker"]
-        }
-      ]
-    },
-    {
-      "dir": "src/audiosummarizer/tools",
-      "purpose": "Tools package (empty)",
-      "files": [
-        {
-          "path": "src/audiosummarizer/tools/__init__.py",
-          "purpose": "Package marker",
-          "key_symbols": []
+          "purpose": "TokenTracker for ElevenLabs usage",
+          "key_symbols": ["TokenTracker", "get_remaining_tokens", "use_tokens", "reset_tokens"]
         }
       ]
     },
     {
       "dir": "src/audiosummarizer/ui",
-      "purpose": "UI config and components",
+      "purpose": "UI config and entry module",
       "files": [
         {
           "path": "src/audiosummarizer/ui/__init__.py",
@@ -185,39 +168,39 @@
           "key_symbols": []
         },
         {
-          "path": "src/audiosummarizer/ui/uiconfigfile.py",
-          "purpose": "UI config reader",
-          "key_symbols": ["Config"]
+          "path": "src/audiosummarizer/ui/uiconfigfile.ini",
+          "purpose": "UI configuration defaults",
+          "key_symbols": []
         },
         {
-          "path": "src/audiosummarizer/ui/uiconfigfile.ini",
-          "purpose": "UI configuration values",
-          "key_symbols": []
+          "path": "src/audiosummarizer/ui/uiconfigfile.py",
+          "purpose": "Config reader for UI settings",
+          "key_symbols": ["Config", "get_llm_options", "get_usecase_options"]
         }
       ]
     },
     {
       "dir": "src/audiosummarizer/ui/streamlitui",
-      "purpose": "Streamlit UI implementation",
+      "purpose": "Streamlit UI components",
       "files": [
         {
           "path": "src/audiosummarizer/ui/streamlitui/loadui.py",
-          "purpose": "Builds UI controls and token display",
-          "key_symbols": ["LoadStreamlitUI"]
+          "purpose": "Builds sidebar inputs and token usage display",
+          "key_symbols": ["LoadStreamlitUI", "load_streamlit_ui"]
         },
         {
           "path": "src/audiosummarizer/ui/streamlitui/display_result.py",
-          "purpose": "Renders transcript, summary, and chat",
-          "key_symbols": ["DisplayResultStreamlit"]
+          "purpose": "Renders transcript, summary, and chat UI",
+          "key_symbols": ["DisplayResultStreamlit", "display_result_on_ui"]
         },
         {
           "path": "src/audiosummarizer/ui/streamlitui/chat_interface.py",
-          "purpose": "Chat Q&A over transcript and summary",
-          "key_symbols": ["ChatInterface"]
+          "purpose": "Chat interface for Q&A on transcript",
+          "key_symbols": ["ChatInterface", "display_chat", "_get_answer_via_graph"]
         },
         {
           "path": "src/audiosummarizer/ui/streamlitui/test.py",
-          "purpose": "Placeholder test file",
+          "purpose": "Empty placeholder",
           "key_symbols": []
         }
       ]
