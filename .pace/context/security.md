@@ -1,26 +1,27 @@
 ## Sensitive Data
 | Data | Where Stored | Protection |
 |---|---|---|
-| GEMINI_API_KEY | Environment variable | Not committed; required at runtime |
-| ELEVENLABS_API_KEY | Environment variable | Not committed; required at runtime |
-| Transcripts/summaries | Streamlit session_state | In-memory session only |
-| Token usage | ~/.elevenlabs_token_usage.json | Local file in user home |
-| Uploaded audio | Temp file on disk | Temporary file path in /tmp or NamedTemporaryFile |
+| GEMINI_API_KEY | Environment variable | Not stored in repo; required at runtime |
+| ELEVENLABS_API_KEY | Environment variable | Not stored in repo; required at runtime |
+| Audio files | Temp files on disk | Stored in system temp; cleanup for video extraction; audio temp kept for chat |
+| Token usage data | ~/.elevenlabs_token_usage.json | Local file with usage totals |
+| Transcripts/Summaries | Streamlit session_state | In-memory for current session only |
 
 ## Trust Boundaries
 | Caller | Callee | Auth Method |
 |---|---|---|
-| App | Google Gemini API | API key (GEMINI_API_KEY) |
-| App | ElevenLabs API | API key (ELEVENLABS_API_KEY) |
+| App (transcribe_node) | ElevenLabs API | ELEVENLABS_API_KEY |
+| App (summarize_node/chat) | Gemini API | GEMINI_API_KEY |
 
 ## Security Requirements
-- Do not commit .env files or API keys
-- Require GEMINI_API_KEY and ELEVENLABS_API_KEY before external API calls
-- Avoid persistent storage for transcripts/summaries (session_state only)
-- Keep token usage file in user home only
+- Do not commit .env or API keys
+- Require GEMINI_API_KEY before Gemini LLM use
+- Require ELEVENLABS_API_KEY before ElevenLabs transcription
+- No persistent storage for transcripts/summaries (session_state only)
 
 ## Security Checklist
-API keys sourced from env vars only: pass
-No auth/user accounts implemented: pass
-Transcript/summary persistence avoided: pass
-Temp files used for uploads: pass
+Keys in repo: fail
+Env vars required: pass
+External API auth: pass
+Persistent transcript storage: pass
+FFmpeg dependency documented: pass
