@@ -1,25 +1,25 @@
 ## Vision
-Purpose: Transcribe customer audio calls, summarize them, and enable Q&A
-Users: Customer support teams analyzing call recordings
+Purpose: Summarize customer audio calls with transcripts, structured summaries, and Q&A
+Users: Customer support analysts and teams reviewing call recordings
 
 ## Target Personas
 | Persona | Pain Point | Goal |
 |---|---|---|
-| Support Analyst | Long calls are time-consuming to review | Get structured summaries quickly |
-| QA Reviewer | Needs evidence for coaching | Ask questions about call details |
-| Support Manager | Wants sentiment and action tracking | See concise issue/context/actions/sentiment |
+| Support Analyst | Long call recordings are time-consuming to review | Get concise summaries and key points fast |
+| QA/Training Lead | Needs evidence of agent performance and customer sentiment | Extract actions taken and sentiment cues |
+| Manager | Limited time to scan call details | High-level understanding of issues and outcomes |
 
 ## MVP Scope
 In Scope:
-- Audio/video upload in Streamlit UI
-- ElevenLabs transcription with diarization
-- Gemini summary with structured sections
-- Chat Q&A over transcript and summary
-- Token usage tracking for transcription
+- Upload audio/video files in Streamlit
+- Transcription via ElevenLabs with diarization
+- Structured summary via Gemini LLM
+- Q&A chat over transcript/summary
+- Token usage tracking for ElevenLabs
 
 Out of Scope:
-- User authentication
-- Persistent storage for transcripts/summaries
+- Auth/login or user management
+- Persistent storage of transcripts/summaries
 - Batch processing or job queues
 - Multi-usecase workflows beyond audio summarizer
 
@@ -27,5 +27,6 @@ Out of Scope:
 | Constraint | Reason |
 |---|---|
 | Requires GEMINI_API_KEY and ELEVENLABS_API_KEY | External API dependencies |
-| ffmpeg needed for video files | moviepy relies on ffmpeg |
-| Session-only storage | Design note in AGENTS.md |
+| ffmpeg needed for video processing | moviepy relies on ffmpeg |
+| Session-state only storage | AGENTS.md restriction |
+| Streamlit UI only | App entrypoint is app.py running Streamlit |
