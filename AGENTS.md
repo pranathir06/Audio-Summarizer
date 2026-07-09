@@ -1,35 +1,34 @@
 ## Tech Stack
-- Python
+- Python (pip)
 - Streamlit (UI)
-- LangGraph, LangChain (orchestration)
-- Google Gemini via langchain-google-genai (LLM)
-- ElevenLabs speech_to_text (transcription)
-- moviepy, mutagen, ffmpeg (media)
-- python-dotenv (env config)
+- LangGraph (langgraph orchestration)
+- Google Gemini via langchain-google-genai
+- ElevenLabs speech_to_text
+- moviepy, mutagen, ffmpeg (external)
+- python-dotenv
 
 ## Project Structure
-- app.py: Streamlit entrypoint, calls load_langgraph_agenticai_app()
-- src/audiosummarizer/LLMS/: Gemini client wrappers
-- src/audiosummarizer/graph/: LangGraph builder (AudioGraphBuilder)
-- src/audiosummarizer/nodes/: graph nodes (transcribe/summarize)
-- src/audiosummarizer/state/: AudioAnalysisState schema
-- src/audiosummarizer/ui/: Streamlit UI + config (uiconfigfile.ini)
-- src/audiosummarizer/ui/streamlitui/: pages/widgets
-- src/audiosummarizer/utils/: token usage tracking
+- app.py: Streamlit entry point; calls load_langgraph_agenticai_app()
+- src/audiosummarizer/state/audio_state.py: AudioAnalysisState schema
+- src/audiosummarizer/graph/audio_graph.py: AudioGraphBuilder.setup_graph()
+- src/audiosummarizer/nodes/: LangGraph node implementations (transcribe/summarize)
+- src/audiosummarizer/LLMS/geminillm.py: Gemini client/config (GEMINI_API_KEY/MODEL)
+- src/audiosummarizer/ui/: Streamlit UI flow and config
+- src/audiosummarizer/utils/token_tracker.py: ElevenLabs token usage file
 
 ## How to Run Tests
 n/a
 
 ## Conventions
-- Keep UI logic in src/audiosummarizer/ui/; graph logic in graph/ and nodes/.
-- Use AudioAnalysisState fields consistently (audio_path, transcript, summary, audio_duration_seconds).
-- Handle UI errors with try/except and st.error/st.warning.
-- Require GEMINI_API_KEY and ELEVENLABS_API_KEY before external calls.
-- Store transcripts/summaries only in Streamlit session_state.
+- Keep Streamlit UI logic in ui/ modules; graph logic in graph/ and nodes/.
+- Use try/except with Streamlit error handling in UI flows.
+- Respect AudioAnalysisState field names and types.
+- Require GEMINI_API_KEY and ELEVENLABS_API_KEY before external API calls.
+- Use session_state for transcript/summary (no persistence).
 
 ## What NOT to Do
-- Do not add persistent storage for transcripts or summaries.
-- Do not add new LLM providers beyond Gemini.
+- Do not add persistent storage for transcripts/summaries.
 - Do not commit .env files or API keys.
-- Do not bypass API-key checks for Gemini/ElevenLabs.
-- Do not mix UI concerns into graph/node code.
+- Do not bypass ffmpeg requirement for video handling.
+- Do not move UI logic into graph/nodes or vice versa.
+- Do not change AudioAnalysisState fields without updating all consumers.
