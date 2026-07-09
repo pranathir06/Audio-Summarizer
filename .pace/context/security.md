@@ -1,21 +1,27 @@
 ## Sensitive Data
 | Data | Where Stored | Protection |
 |---|---|---|
-| GEMINI_API_KEY | Environment variable | Not committed; read via dotenv/env |
-| ELEVENLABS_API_KEY | Environment variable | Not committed; read via dotenv/env |
-| Audio transcript/summary | Streamlit session state | In-memory only; no persistence |
-| Token usage file | ~/.elevenlabs_token_usage.json | Local file in user home directory |
+| GEMINI_API_KEY | Environment variable | Not stored in code; loaded via dotenv |
+| ELEVENLABS_API_KEY | Environment variable | Not stored in code; loaded via dotenv |
+| Audio files | Temp files created in main.py and loadui.py | Local temp storage; no encryption noted |
+| Transcript/Summary | st.session_state | In-memory Streamlit session state |
+| ElevenLabs token usage | ~/.elevenlabs_token_usage.json | Local file; no encryption noted |
+
 ## Trust Boundaries
 | Caller | Callee | Auth Method |
 |---|---|---|
-| Streamlit app | Gemini API (langchain-google-genai) | API key in GEMINI_API_KEY |
-| Streamlit app | ElevenLabs speech_to_text | API key in ELEVENLABS_API_KEY |
+| Streamlit app | Google Gemini API | API key (GEMINI_API_KEY) |
+| Streamlit app | ElevenLabs API | API key (ELEVENLABS_API_KEY) |
+| UI components | Local filesystem | None (local file access) |
+
 ## Security Requirements
-- Do not commit API keys or .env files
-- Require GEMINI_API_KEY before LLM calls
-- Require ELEVENLABS_API_KEY before transcription
-- No persistent storage for transcripts/summaries
+- Do not commit API keys or .env files (AGENTS.md)
+- Require GEMINI_API_KEY and ELEVENLABS_API_KEY before external calls
+- Do not add persistent storage for transcripts/summaries (AGENTS.md)
+- Preserve ffmpeg requirement for video processing
+
 ## Security Checklist
-API keys stored in env vars: pass
-Transcripts persisted to disk: fail (must remain in session state)
-ffmpeg required for video processing: pass
+Secrets committed to repo: Pass
+API keys required before LLM/transcription calls: Pass
+Transcripts persisted to disk: Pass (not persisted)
+Local token usage file protected/encrypted: Fail (plain JSON)
