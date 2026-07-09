@@ -1,7 +1,7 @@
 ---
 language: python
 package_manager: pip
-test_runner: none
+test_runner: pytest
 test_command: "n/a"
 test_file_pattern: "n/a"
 require_tests: false
@@ -9,58 +9,58 @@ require_tests: false
 ## Module Map
 | Directory | Language | Purpose |
 |---|---|---|
-| . | Python | Streamlit entry point and project docs |
-| src | Python | Package root |
-| src/audiosummarizer | Python | Audio summarizer app logic |
-| src/audiosummarizer/graph | Python | LangGraph workflow builder |
-| src/audiosummarizer/nodes | Python | Graph node functions |
-| src/audiosummarizer/state | Python | Typed state schema |
-| src/audiosummarizer/LLMS | Python | LLM client wrapper |
-| src/audiosummarizer/ui | Python | UI config + Streamlit views |
-| src/audiosummarizer/ui/streamlitui | Python | Streamlit components |
+| . | Python | Streamlit entrypoint and project metadata |
+| src/audiosummarizer | Python | Audio summarizer package root |
+| src/audiosummarizer/LLMS | Python | LLM client wrappers |
+| src/audiosummarizer/graph | Python | LangGraph graph construction |
+| src/audiosummarizer/nodes | Python | Graph node implementations |
+| src/audiosummarizer/state | Python | Graph state schema |
+| src/audiosummarizer/ui | Python | Streamlit UI components and config |
+| src/audiosummarizer/ui/streamlitui | Python | Streamlit pages/widgets |
 | src/audiosummarizer/utils | Python | Token usage tracking |
 
 ## Tech Stack
 | Component | Technology |
 |---|---|
 | UI | Streamlit |
-| Orchestration | LangGraph (langgraph) |
+| Orchestration | LangGraph, LangChain |
 | LLM | Google Gemini via langchain-google-genai |
 | Transcription | ElevenLabs speech_to_text |
-| Audio/Video | moviepy, mutagen, ffmpeg |
-| Env config | python-dotenv |
+| Media Processing | moviepy, mutagen, ffmpeg |
+| Env Config | python-dotenv |
 
 ## System Architecture
-| Flow | Details |
-|---|---|
-| Entry point | app.py -> load_langgraph_agenticai_app() |
-| UI to graph | Streamlit UI collects file + triggers graph.invoke(initial_state) |
-| Graph pipeline | START -> audio_file -> transcribe -> summarize -> END |
-| Chat | Streamlit chat uses existing transcript/summary without graph re-run |
-| Token tracking | TokenTracker stores usage in ~/.elevenlabs_token_usage.json |
+| Step | Component | Interaction |
+|---|---|---|
+| 1 | app.py | Calls load_langgraph_agenticai_app() |
+| 2 | LoadStreamlitUI | Collects file upload + process click |
+| 3 | AudioGraphBuilder | Builds START→audio_file→transcribe→summarize→END |
+| 4 | transcribe_node | Calls ElevenLabs speech_to_text.convert() |
+| 5 | summarize_node | Calls Gemini LLM with transcript prompt |
+| 6 | DisplayResultStreamlit | Renders transcript, summary, chat |
+| 7 | ChatInterface | Answers Q&A using Gemini and cached transcript/summary |
 
 ## Key Interfaces & Contracts
 | Interface | Location | Contract |
 |---|---|---|
-| Streamlit app | app.py | load_langgraph_agenticai_app() |
-| Graph builder | graph/audio_graph.py | AudioGraphBuilder.setup_graph("Audio Summarizer") |
-| State schema | state/audio_state.py | AudioAnalysisState: audio_path, transcript, summary, audio_duration_seconds |
-| Transcription | nodes/transcribe_node.py | transcribe_node(state) requires ELEVENLABS_API_KEY |
-| Summarization | nodes/summarize_node.py | summarize_node(state) requires GEMINI_API_KEY |
-| Chat QA | ui/streamlitui/chat_interface.py | _get_answer_via_graph(question) uses transcript + summary |
+| Streamlit entrypoint | app.py | load_langgraph_agenticai_app() |
+| Graph state | state/audio_state.py | audio_path, transcript, summary, audio_duration_seconds |
+| Graph builder | graph/audio_graph.py | setup_graph("Audio Summarizer") |
+| Env vars | LLMS/geminillm.py, nodes/transcribe_node.py | GEMINI_API_KEY, GEMINI_MODEL?, ELEVENLABS_API_KEY |
+| UI config | ui/uiconfigfile.ini | PAGE_TITLE, LLM_OPTIONS, USECASE_OPTIONS |
 
 ## Coding Conventions
-| Rule | Evidence |
+| Rule | Source |
 |---|---|
-| UI error handling | st.error/st.warning used in main.py and loadui.py |
-| State keys | audio_path, transcript, summary, audio_duration_seconds used across nodes |
-| Env vars required | GEMINI_API_KEY, ELEVENLABS_API_KEY (GeminiLLM, transcribe_node) |
-| Temp files | NamedTemporaryFile for uploads; do not delete until chat complete |
-| Config file | uiconfigfile.ini consumed by Config (note: Config path uses ./src/langgraphagenticai/ui/uiconfigfile.ini) |
+| UI error handling via st.error/st.warning in try/except | AGENTS.md |
+| Keep UI logic in ui/ modules | AGENTS.md |
+| Keep graph logic in graph/ and nodes/ | AGENTS.md |
+| Use AudioAnalysisState fields consistently | AGENTS.md |
+| Avoid persistent transcript/summary storage (session_state only) | AGENTS.md |
 
 ## Test Patterns
-| Item | Details |
+| Aspect | Details |
 |---|---|
-| Test framework | none configured |
+| Test framework | None detected |
 | Test command | n/a |
-| Test files | none found |
+| Test locations | n/a |
